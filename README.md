@@ -3,7 +3,9 @@
 ASP.NET Core Crash Course
 
 ```cmd
-new mvc -f net7.0 -n CarvedRock.Admin
+dotnet new mvc -f net7.0 -n CarvedRock.Admin
+
+dotnet dev-certs https -t
 ```
 
 Command Palette...
