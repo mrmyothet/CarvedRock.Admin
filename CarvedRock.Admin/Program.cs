@@ -1,9 +1,26 @@
+using CarvedRock.Admin.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<ProductContext>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var ctx = serviceProvider.GetRequiredService<ProductContext>();
+    ctx.Database.Migrate();
+
+    if (app.Environment.IsDevelopment())
+    {
+        ctx.SeedInitialData();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -6,6 +6,15 @@ ASP.NET Core Crash Course
 dotnet new mvc -f net7.0 -n CarvedRock.Admin
 
 dotnet dev-certs https -t
+
+dotnet tool install --global dotnet-ef --version 7.0.20
+
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 7.0.20
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 7.0.20
+
+dotnet ef migrations add Initial
+dotnet ef database update
+
 ```
 
 Command Palette...
@@ -14,7 +23,7 @@ Command Palette...
 
 ---
 
-# MVC Crash Course - ASP.NET Core 6
+# ASP.NET Core MVC Crash Course
 
 > [!NOTE]  
 > The [`aspnet8` branch](https://github.com/dahlsailrunner/crash-course-aspnet6-mvc/tree/aspnet8) contains updates for this project for use with ASP.NET 8.
