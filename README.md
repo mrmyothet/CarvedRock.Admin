@@ -20,6 +20,9 @@ dotnet ef migrations add AddCategory
 dotnet tool install --global dotnet-aspnet-codegenerator --version 7.0.12
 dotnet-aspnet-codegenerator controller -name CategoriesController -namespace CarvedRock.Admin.Controllers -m CarvedRock.Admin.Data.Category -dc CarvedRock.Admin.Data.ProductContext --useDefaultLayout -dbProvider sqlite
 
+dotnet add package FluentValidation.AspNetCore
+dotnet list package
+
 ```
 
 Command Palette...
