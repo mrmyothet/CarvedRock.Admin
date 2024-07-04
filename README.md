@@ -15,6 +15,11 @@ dotnet add package Microsoft.EntityFrameworkCore.Design --version 7.0.20
 dotnet ef migrations add Initial
 dotnet ef database update
 
+dotnet ef migrations add AddCategory
+
+dotnet tool install --global dotnet-aspnet-codegenerator --version 7.0.12
+dotnet-aspnet-codegenerator controller -name CategoriesController -namespace CarvedRock.Admin.Controllers -m CarvedRock.Admin.Data.Category -dc CarvedRock.Admin.Data.ProductContext --useDefaultLayout -dbProvider sqlite
+
 ```
 
 Command Palette...
@@ -26,6 +31,16 @@ Command Palette...
 [Adding a Bootstrap Theme - Litera](https://bootswatch.com/)
 
 ---
+
+Configuration Order (each overrides prior)
+
+- AppSettings
+- AppSettings-Environment
+- User secrets (Development only)
+- Environment variables
+- Command line args
+
+[Configuration and Options in ASP.NET Core](https://pluralsight.com/library/courses/asp-dot-net-core-6-configuration-options)
 
 # ASP.NET Core MVC Crash Course
 
