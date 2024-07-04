@@ -1,3 +1,4 @@
+using CarvedRock.Admin.Logic;
 using CarvedRock.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,23 +6,88 @@ namespace CarvedRock.Admin.Controllers;
 
 public class ProductsController : Controller
 {
-    public List<ProductModel> Products { get; set; }
+    private readonly IProductLogic _logic;
 
-    public ProductsController()
+    // public List<ProductModel> Products { get; set; }
+
+    public ProductsController(IProductLogic logic)
     {
-        Products = GetSampleProducts();
+        // Products = GetSampleProducts();
+        _logic = logic;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View(Products);
+        var products = await _logic.GetAllProducts();
+        return View(products);
     }
 
-    public IActionResult Details(int Id)
+    public async Task<IActionResult> Details(int id)
     {
-        var product = Products.Find(p => p.Id == Id);
+        // var product = Products.Find(p => p.Id == Id);
+        var product = await _logic.GetProductById(id);
 
         return product is null ? NotFound("No data found") : View(product);
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id, Name, Description, Price, IsActive")] ProductModel product)
+    {
+        if (!ModelState.IsValid) return View(product);
+
+        await _logic.AddNewProduct(product);
+        return RedirectToAction(nameof(Index));
+
+    }
+
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null) return View("Not Found");
+
+        var productModel = await _logic.GetProductById(id.Value);
+        if (productModel == null) return View("Not Found");
+
+        return View(productModel);
+
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Description, Price, IsActive")] ProductModel product)
+    {
+        if (id != product.Id) return View("Not Found");
+
+        if (!ModelState.IsValid) return View(product);
+
+        await _logic.UpdateProduct(product);
+        return RedirectToAction(nameof(Index));
+    }
+
+    // GET : Products/Delete/5
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return View("NotFound");
+
+        var productModel = await _logic.GetProductById(id.Value);
+        if (productModel == null) return View("Not Found");
+
+        return View(productModel);
+    }
+
+    // POST : Products/Delete/5
+    [HttpPost]
+    [ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _logic.RemoveProduct(id);
+        return RedirectToAction(nameof(Index));
     }
 
     private List<ProductModel>? GetSampleProducts()
