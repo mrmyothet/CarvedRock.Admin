@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Threading.Tasks.Sources;
 using CarvedRock.Admin.Logic;
 using CarvedRock.Admin.Models;
@@ -107,6 +108,14 @@ public class ProductsController : Controller
     {
         await _logic.RemoveProduct(id);
         return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        });
     }
 
     private List<ProductModel>? GetSampleProducts()
