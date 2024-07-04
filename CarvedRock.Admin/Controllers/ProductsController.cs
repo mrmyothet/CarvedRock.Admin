@@ -59,6 +59,7 @@ public class ProductsController : Controller
 
     }
 
+    // GET : Products/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -74,13 +75,14 @@ public class ProductsController : Controller
             return View("NotFound");
         }
 
+        await _logic.GetAvailableCategories(productModel);
         return View(productModel);
 
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Description, Price, IsActive")] ProductModel product)
+    public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Description, Price, IsActive, CategoryId")] ProductModel product)
     {
         if (id != product.Id) return View("Not Found");
 

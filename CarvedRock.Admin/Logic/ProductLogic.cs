@@ -68,4 +68,9 @@ public class ProductLogic : IProductLogic
         var productToSave = productToUpdate.ToProduct();
         await _repo.UpdateProductAsync(productToSave);
     }
+
+    public async Task GetAvailableCategories(ProductModel productModel)
+    {
+        productModel.AvailableCategories = await GetAvailableCategoriesFromDb();
+    }
 }
