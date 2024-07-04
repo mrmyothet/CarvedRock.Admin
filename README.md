@@ -23,6 +23,10 @@ Command Palette...
 
 ---
 
+[Adding a Bootstrap Theme - Litera](https://bootswatch.com/)
+
+---
+
 # ASP.NET Core MVC Crash Course
 
 > [!NOTE]  
