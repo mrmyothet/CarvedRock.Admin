@@ -42,14 +42,15 @@ public class ProductsController : Controller
         return View(product);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> CreateAsync()
     {
-        return View();
+        var model = await _logic.InitializeProductModel();
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id, Name, Description, Price, IsActive")] ProductModel product)
+    public async Task<IActionResult> Create([Bind("Id, Name, Description, Price, IsActive, CategoryId")] ProductModel product)
     {
         if (!ModelState.IsValid) return View(product);
 

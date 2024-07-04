@@ -1,5 +1,6 @@
 using CarvedRock.Admin.Repository;
 using CarvedRock.Admin.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CarvedRock.Admin.Logic;
 
@@ -38,6 +39,23 @@ public class ProductLogic : IProductLogic
     {
         var product = await _repo.GetProductByIdAsync(id);
         return product == null ? null : ProductModel.FromProduct(product);
+    }
+
+    public async Task<ProductModel> InitializeProductModel()
+    {
+        return new ProductModel
+        {
+            AvailableCategories = await GetAvailableCategoriesFromDb()
+        };
+    }
+
+    private async Task<List<SelectListItem>> GetAvailableCategoriesFromDb()
+    {
+        var cats = await _repo.GetAllCategoriesAsync();
+        var returnList = new List<SelectListItem> { new SelectListItem("None", "") };
+        var availCatList = cats.Select(item => new SelectListItem(item.Name, item.Id.ToString()));
+        returnList.AddRange(availCatList);
+        return returnList;
     }
 
     public async Task RemoveProduct(int id)
