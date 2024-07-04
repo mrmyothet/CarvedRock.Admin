@@ -1,3 +1,4 @@
+using System.Threading.Tasks.Sources;
 using CarvedRock.Admin.Logic;
 using CarvedRock.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,15 @@ public class ProductsController : Controller
 {
     private readonly IProductLogic _logic;
 
+    public ILogger<ProductsController> _logger { get; }
+
     // public List<ProductModel> Products { get; set; }
 
-    public ProductsController(IProductLogic logic)
+    public ProductsController(IProductLogic logic, ILogger<ProductsController> logger)
     {
         // Products = GetSampleProducts();
         _logic = logic;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index()
@@ -27,7 +31,14 @@ public class ProductsController : Controller
         // var product = Products.Find(p => p.Id == Id);
         var product = await _logic.GetProductById(id);
 
-        return product is null ? NotFound("No data found") : View(product);
+        // return product is null ? View("NotFound") : View(product);
+        if (product == null)
+        {
+            _logger.LogInformation("Details not found for id {id}", id);
+            return View("NotFound");
+        }
+
+        return View(product);
     }
 
     public IActionResult Create()
@@ -48,10 +59,18 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Edit(int? id)
     {
-        if (id == null) return View("Not Found");
+        if (id == null)
+        {
+            _logger.LogInformation("No id is passed for Edit");
+            return View("NotFound");
+        }
 
         var productModel = await _logic.GetProductById(id.Value);
-        if (productModel == null) return View("Not Found");
+        if (productModel == null)
+        {
+            _logger.LogInformation("Edit details not found for id {id}", id);
+            return View("NotFound");
+        }
 
         return View(productModel);
 
